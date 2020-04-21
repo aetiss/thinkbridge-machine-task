@@ -1,9 +1,21 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, wait, cleanup } from '@testing-library/react';
+
 import App from './App';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+afterEach(cleanup);
+test('render application', () => {
+  render(<App />);
+  expect(screen.getByText('Countries')).toBeInTheDocument();
+});
+
+test('drop down of countries', async () => {
+  const countries = [{ name: 'Aruba', capitalCity: 'Oranjestad', id: 'ABW' }];
+  render(<App />);
+  await wait(() =>
+    expect(screen.getByText('Selected Country')).toBeInTheDocument(),
+  );
+  countries.forEach((country) => {
+    expect(screen.getByTestId('select')).toBeInTheDocument();
+  });
 });
